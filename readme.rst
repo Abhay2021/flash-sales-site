@@ -1,29 +1,91 @@
 ###################
-What is CodeIgniter
+# Flash Sales Site MVP
 ###################
 
-CodeIgniter is an Application Development Framework - a toolkit - for people
-who build web sites using PHP. Its goal is to enable you to develop projects
-much faster than you could if you were writing code from scratch, by providing
-a rich set of libraries for commonly needed tasks, as well as a simple
-interface and logical structure to access these libraries. CodeIgniter lets
-you creatively focus on your project by minimizing the amount of code needed
-for a given task.
+Create a flash sales site where customer save more when shop more.
+
+Admin should be able to create deals with following information:
+
+- title
+
+- description
+
+- price
+
+- discounted price
+
+- quantity
+
+- publish date. 
+
+- An Image
+
+
+A deal should be publishable if:
+
+- It has all the required attributes, and passes other validations, wherever required.
+
+- No other deal is scheduled to be published on the same date.
+
+  - Only one deal can be live at a time.
+
+
+Deal will be live for 24 hours only, and every new deal will be published at 10 AM IST. 
+
+The site wuld be membership only site, so customer need to be logged in to see any deal.
+
+The site's home page would be displaying the deal of the day with deal details and buy now button. 
+
+Buy Constraints:
+
+  - Customer can buy one and only one quantity of the deal.
+
+  - Clicking on buy now button should ask for confirmation before placing order. We'll not take any payment or shipping info for now, so the order is placed as soon as customer confirms the order.
+
+  - Also ensure that we do not over sell i.e we sell only 'n' quantities if 'n' quantities were available. Handle race condition here.
+
+
+- Make sure you deliver your best code (optimized, efficient and expendable). 
+
+- We are looking forward to see your web development skills, in this exercise. 
+
+- Don't implement customer's signup/login functionality. Just seed few customers in DB and switch account passing/changing customer id in cookie/url parameters. Cookie not set or have invalid customer id means customer not logged in. 
+
+- Do not spend too much of time on CSS.
+
+- Let us know the assumptions taken while development, if any.
+
+- Also share the total time spent on the exercise.
+
+
+Good to have features for plus points:
+
+
+- Rewarding Returning Customers:     
+
+   - Returning Customer would get additional 1% discount on the discounted price on his every next order and max up to 5%.
+
+     - For example: Customer placing order for the first time would get no additional discount, but would get additional 1% on his second order, similarly 2% on third and so on. 
 
 *******************
 Release Information
 *******************
+make a folder with name "deals"
+clone the repositery inside that folder.
+admin dashboard : www.abc.com/deals/admin/dashboard/1 (last parameter in url is admin id)
+add deals : click on add deals in admin dashboard
+admin logout : click logout button in admin dashboard
 
-This repo contains in-development code for future releases. To download the
-latest stable release please visit the `CodeIgniter Downloads
-<https://codeigniter.com/download>`_ page.
+User dashboard : www.abc.com/deals/user/dashboard/2 (last parameter in url is user id)
+shop more : click on add deals in User dashboard
+User logout : click logout button in User dashboard
+
+
 
 **************************
 Changelog and New Features
 **************************
 
-You can find a list of all changes for each release in the `user
-guide change log <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/changelog.rst>`_.
 
 *******************
 Server Requirements
@@ -53,18 +115,10 @@ agreement <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/so
 Resources
 *********
 
--  `User Guide <https://codeigniter.com/docs>`_
--  `Language File Translations <https://github.com/bcit-ci/codeigniter3-translations>`_
--  `Community Forums <http://forum.codeigniter.com/>`_
--  `Community Wiki <https://github.com/bcit-ci/CodeIgniter/wiki>`_
--  `Community Slack Channel <https://codeigniterchat.slack.com>`_
 
-Report security issues to our `Security Panel <mailto:security@codeigniter.com>`_
-or via our `page on HackerOne <https://hackerone.com/codeigniter>`_, thank you.
 
 ***************
 Acknowledgement
 ***************
 
-The CodeIgniter team would like to thank EllisLab, all the
-contributors to the CodeIgniter project and you, the CodeIgniter user.
+
