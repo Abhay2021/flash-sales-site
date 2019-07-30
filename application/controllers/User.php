@@ -36,7 +36,7 @@ public function index($id=null){
         $time = date('H');
         $day = date('a');//am or pm
         //echo " $today $time $day $yesterday";exit;
-        if($time>10){
+        if($time>=10){
             $deals = $this->db->query("SELECT * FROM `deals` WHERE publish_date = '$today' AND publish=1 ");
         }else{
             $deals = $this->db->query("SELECT * FROM `deals` WHERE publish_date = '$yesterday' AND publish=1 "); 
