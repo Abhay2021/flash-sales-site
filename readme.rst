@@ -73,11 +73,11 @@ Release Information
 make a folder with name "deals"
 clone the repositery inside that folder.
 admin dashboard : www.abc.com/deals/admin/dashboard/1 (last parameter in url is admin id)
-add deals : click on add deals in admin dashboard
+add deals : click on add deals button in admin dashboard
 admin logout : click logout button in admin dashboard
 
 User dashboard : www.abc.com/deals/user/dashboard/2 (last parameter in url is user id)
-shop more : click on add deals in User dashboard
+shop more : click on shop more button in User dashboard
 User logout : click logout button in User dashboard
 
 

@@ -11,11 +11,15 @@ foreach($deals as $key =>$d){
         
         }
         else
-        {?>
+        { if($d->remaining_quantity > 0){  ?>
         <div class="row">
         <a href="<?php echo base_url("/user/buy/$uid/$d->id"); ?>" onclick="return confirm('Do you confirm the order?')" class="btn btn-primary">Buy Now</a>
         </div>
-    <?php    }  
+        <?php  }else{ ?>
+            <div class="row">
+            <a href="javascript:void(0)"  class="btn btn-primary">Out of Stock</a>
+            </div>
+    <?php    }  }  
 ?>
 
 <div class="row">

@@ -70,7 +70,7 @@ public function dashboard($id=null){
         echo "Access Denied !unauthorized access";
     }
     if($status){
-        $deals = $this->db->query("SELECT deals.* FROM deals INNER JOIN orders ON deals.id = orders.deals_id");
+        $deals = $this->db->query("SELECT deals.* FROM deals INNER JOIN orders ON deals.id = orders.deals_id AND orders.user_id= '$id'");
        // print_r($deals->result());exit;
         $this->data['deals'] = $deals->result();
         $count = $this->db->query("SELECT count(`id`) as total_visit FROM `orders` WHERE user_id='$id'");
