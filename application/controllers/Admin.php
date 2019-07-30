@@ -18,6 +18,8 @@ public function dashboard($id=null){
        // $this->session->set_userdata($val[0]);
         $this->session->set_userdata('admin', 'true');  
        $status = true;
+      }else{
+        $status = false;   
       }
     }
     else if($this->session->admin == 'true'){
@@ -32,6 +34,8 @@ public function dashboard($id=null){
         $this->load->view('header');
         $this->load->view('admin/dashboard',$this->data);
         $this->load->view('footer');
+    }else{
+        echo "Access Denied !unauthorized access";
     }
 
    
