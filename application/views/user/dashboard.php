@@ -15,7 +15,7 @@
 </div>
 <?php 
 if($deals){
-foreach($deals as $key =>$d){
+foreach($deals as $key =>$d){ $user_discount= $key;
 ?>
 <div class="row">
 <div class="col-md-2"><?php echo $d->title; ?></div>
@@ -26,7 +26,7 @@ foreach($deals as $key =>$d){
 <div class="col-md-1"><?php $user_discount = $user_discount/100;
 $discount_price= $user_discount*$d->discounted_price;
 $user_discounted_price = $d->discounted_price - $discount_price;
-echo $discount_price?$discount_price:$d->discounted_price;
+echo $user_discounted_price?$user_discounted_price:$d->discounted_price;
 ?></div> 
 <div class="col-md-2"><?php $img = base_url()."/uploads/".$d->image; ?>
 <img src="<?php echo $img; ?>" alt="image" class="img-fluid" width="100px" height="100px" >
