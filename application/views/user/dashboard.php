@@ -16,7 +16,7 @@
 <?php 
 if($deals){ $user_discount_percent=0;
 foreach($deals as $key =>$d){ 
-    if($key%5==0){ $user_discount_percent=0; }
+   if($key%5!=0){ $user_discount_percent++; }else{ $user_discount_percent=0; }
     
 ?>
 <div class="row">
@@ -35,4 +35,4 @@ echo $user_discounted_price?$user_discounted_price:$d->discounted_price;
 </div> 
 
 </div>
-<?php $user_discount_percent++; }} ?>
+<?php    }} ?>
