@@ -14,16 +14,18 @@
 <div class="col-md-2">image</div>
 </div>
 <?php 
-if($deals){
-foreach($deals as $key =>$d){ $user_discount= $key;
+if($deals){ $user_discount_percent=0;
+foreach($deals as $key =>$d){ 
+    if($key%5==0){ $user_discount_percent=0; }
+    
 ?>
 <div class="row">
 <div class="col-md-2"><?php echo $d->title; ?></div>
 <div class="col-md-2"><?php echo $d->description; ?></div>
 <div class="col-md-1"><?php echo $d->price; ?></div>
 <div class="col-md-1"><?php echo $d->discounted_price; ?></div>
-<div class="col-md-1"><?php echo $user_discount?$user_discount:'0'; ?></div>
-<div class="col-md-1"><?php $user_discount = $user_discount/100;
+<div class="col-md-1"><?php echo $user_discount_percent?$user_discount_percent:'0'; ?></div>
+<div class="col-md-1"><?php $user_discount = $user_discount_percent/100;
 $discount_price= $user_discount*$d->discounted_price;
 $user_discounted_price = $d->discounted_price - $discount_price;
 echo $user_discounted_price?$user_discounted_price:$d->discounted_price;
@@ -33,4 +35,4 @@ echo $user_discounted_price?$user_discounted_price:$d->discounted_price;
 </div> 
 
 </div>
-<?php }} ?>
+<?php $user_discount_percent++; }} ?>
