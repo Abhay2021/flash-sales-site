@@ -45,22 +45,6 @@ Buy Constraints:
   - Also ensure that we do not over sell i.e we sell only 'n' quantities if 'n' quantities were available. Handle race condition here.
 
 
-- Make sure you deliver your best code (optimized, efficient and expendable). 
-
-- We are looking forward to see your web development skills, in this exercise. 
-
-- Don't implement customer's signup/login functionality. Just seed few customers in DB and switch account passing/changing customer id in cookie/url parameters. Cookie not set or have invalid customer id means customer not logged in. 
-
-- Do not spend too much of time on CSS.
-
-- Let us know the assumptions taken while development, if any.
-
-- Also share the total time spent on the exercise.
-
-
-Good to have features for plus points:
-
-
 - Rewarding Returning Customers:     
 
    - Returning Customer would get additional 1% discount on the discounted price on his every next order and max up to 5%.
@@ -68,19 +52,14 @@ Good to have features for plus points:
      - For example: Customer placing order for the first time would get no additional discount, but would get additional 1% on his second order, similarly 2% on third and so on. 
 
 *******************
-Release Information
+login details
 *******************
-make a folder with name "deals"
-clone the repositery inside that folder.
-admin dashboard : www.abc.com/deals/admin/dashboard/1 (last parameter in url is admin id)
-add deals : click on add deals button in admin dashboard
-admin logout : click logout button in admin dashboard
+login : www.example.com/deals/login
+login email : admin@gmail.com
+password : 12345
 
-User dashboard : www.abc.com/deals/user/dashboard/2 (last parameter in url is user id)
-shop more : click on shop more button in User dashboard
-User logout : click logout button in User dashboard
-
-
+user email : smith@yahoo.com
+password : 12345
 
 **************************
 Changelog and New Features
@@ -100,10 +79,7 @@ issues, as well as missing features.
 ************
 Installation
 ************
-
-Please see the `installation section <https://codeigniter.com/user_guide/installation/index.html>`_
-of the CodeIgniter User Guide.
-
+import mvc.sql file  in mysql database 
 *******
 License
 *******

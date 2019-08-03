@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card p-5">
 <div class="row">
 <h2>Today Flash Deals</h2>
 </div>
@@ -13,7 +13,7 @@ foreach($deals as $key =>$d){
         else
         { if($d->remaining_quantity > 0){  ?>
         <div class="row">
-        <a href="<?php echo base_url("/user/buy/$uid/$d->id"); ?>" onclick="return confirm('Do you confirm the order?')" class="btn btn-primary">Buy Now</a>
+        <a href="<?php echo base_url("/user/buy/$d->id"); ?>" onclick="return confirm('Do you confirm the order?')" class="btn btn-primary">Buy Now</a>
         </div>
         <?php  }else{ ?>
             <div class="row">

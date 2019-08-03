@@ -2,66 +2,69 @@
 echo validation_errors('<div class="alert alert-danger">', '</div>'); 
 echo $this->session->flashdata('error');
 ?>
-<div class="card m-5">
+<div class="card p-5">
+<div class="row">
+<a href="<?php echo base_url(); ?>admin/dashboard" class="btn btn-primary" >Dashboard</a>
+</div>
 <div class="row"><h2>Add Deals</h2></div>
 <form id="deals_add" method="post"  action="<?php echo base_url(); ?>/admin/save_deals" enctype="multipart/form-data" >
-<div class="row mt-5">
-    <div class="form-group col-md-6">
-        <label for="title" class="col-sm-2 col-form-label">Title</label>
-        <div class="col-sm-10">
+<div class="row mt-5 mb-3">
+    <div class="col-md-6"><div class="row">
+        <label for="title" class="col-sm-3 col-form-label">Title</label>
+        <div class="col-sm-8">
         <input name="title" type="text" class="form-control req" id="title" placeholder="title">
         <span class="error"></span>
-        </div>
+        </div></div>
     </div>
-    <div class="col-md-6">
-        <label for="description" class="col-sm-2 col-form-label">Description</label>
-        <div class="col-sm-10">
+    <div class="col-md-6"><div class="row">
+        <label for="description" class="col-sm-3 col-form-label">Description</label>
+        <div class="col-sm-8">
         <textarea name="description" type="text" class="form-control req" id="description" ></textarea>
         <span class="error"></span>
-        </div>
+        </div></div>
     </div>
 </div>
 
-<div class="row">
-    <div class="form-group col-md-6">
-        <label for="price" class="col-sm-2 col-form-label">Price</label>
-        <div class="col-sm-10">
+<div class="row mb-3">
+    <div class="col-md-6"><div class="row">
+        <label for="price" class="col-sm-3 col-form-label">Price</label>
+        <div class="col-sm-8">
         <input name="price" type="text" class="form-control req" id="price" placeholder="price">
         <span class="error"></span>
-        </div>
+        </div></div>
     </div>
-    <div class="col-md-6">
-        <label for="discount" class="col-sm-2 col-form-label">Discounted Price</label>
-        <div class="col-sm-10">
+    <div class="col-md-6"><div class="row">
+        <label for="discount" class="col-sm-3 col-form-label">Discounted Price</label>
+        <div class="col-sm-8">
         <input name="discount" type="text" class="form-control req" id="discount" placeholder="discounted price">        
         <span class="error"></span>
-        </div>
+        </div></div>
     </div>
 </div>
 
-<div class="row">
-    <div class="form-group col-md-6">
-        <label for="quantity" class="col-sm-2 col-form-label">quantity</label>
-        <div class="col-sm-10">
+<div class="row mb-3">
+    <div class="col-md-6"><div class="row">
+        <label for="quantity" class="col-sm-3 col-form-label">quantity</label>
+        <div class="col-sm-8">
         <input name="quantity" type="text" class="form-control req" id="quantity" placeholder="quantity">
         <span class="error"></span>
-        </div>
+        </div></div>
     </div>
-    <div class="col-md-6">
-        <label for="date" class="col-sm-2 col-form-label">Publish date</label>
-        <div class="col-sm-10">
+    <div class="col-md-6"><div class="row">
+        <label for="date" class="col-sm-3 col-form-label">Publish date</label>
+        <div class="col-sm-8">
         <input name="date" type="date" class="form-control req" id="date" placeholder="dd/mm/yy"> 
         <span class="error"></span>       
-        </div>
+        </div></div>
     </div>
 </div>
-<div class="row">
-    <div class="form-group col-md-6">
-        <label for="image" class="col-sm-2 col-form-label">Image</label>
-        <div class="col-sm-10">
+<div class="row mb-3">
+    <div class="col-md-6"><div class="row">
+        <label for="image" class="col-sm-3 col-form-label">Image</label>
+        <div class="col-sm-8">
         <input  name="image" type="file" class=" req" id="image">
         <span class="error"></span>
-        </div>
+        </div></div>
     </div>
 </div>
 <div class="row">
@@ -69,7 +72,7 @@ echo $this->session->flashdata('error');
 </div>
 </form>
 </div>            
-<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
 <script>
 //-----------checking date for dublication------------
 var date = <?php echo json_encode($date); ?>;
@@ -110,9 +113,7 @@ $(document).ready(function () {
 					$(this).addClass('fieldisrequired');
 					$(this).siblings('.error').html('This field is required').show().fadeOut(9500).css("color", "red");
 					$('html,body').animate({scrollTop: $(this).offset().top}, 0);
-					$('#Error_msg').empty();
-					$('#Error_msg').html('Please fill the required fields shown in red box');
-					$('#Error_msg').css("color", "red");
+					
 					status=false;
 					return false;
 				}
@@ -120,22 +121,22 @@ $(document).ready(function () {
 				{
 					$(this).removeClass('fieldisrequired');
 					$(this).siblings('.error').html('');	
-			}
+			    }
 			
 		});
 
-		$('.important').on("blur", function(){
+		$('.req').on("blur", function(){
 			$(this).removeClass('fieldisrequired');
 			$(this).siblings('.help').html('');
 		});
 
 
-		if(!status)
-		{
-			return status;
-		}
-		else
-		{  	
+            if(!status)
+            {
+                return status;
+            }
+            else
+            {  	
 			return true;
 			}
 		});

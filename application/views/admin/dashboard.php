@@ -1,6 +1,8 @@
 <div class="row"><h2>Admin Dashboard</h2></div>
 <div class="row m-2">
-<a href="<?php echo base_url(); ?>/admin/add_deals" class="btn btn-primary" >Add Deals</a>
+<a href="<?php echo base_url(); ?>admin/add_deals" class="btn btn-primary" >Add Deals</a>
+<a href="<?php echo base_url(); ?>admin/register_user" class="btn btn-secondary" >Add User</a>
+<a href="<?php echo base_url(); ?>admin/get_all_user" class="btn btn-dark" >Users</a>
 <a href="<?php echo base_url("admin/logout"); ?>" class="btn btn-danger" >Log out</a>
 </div>
 <div class="row">

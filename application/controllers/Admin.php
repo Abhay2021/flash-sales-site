@@ -7,22 +7,10 @@ class Admin extends CI_Controller {
 	{
         parent::__construct();	
         $this->load->library('form_validation');
-		$this->load->model('user_model', 'auth');
 	}	
 
-public function dashboard($id=null){
-    if($id){
-        $val = $this->auth->get_user_info($id);
-       // print_r($val[0]->admin);exit;
-      if($val[0]->admin==1){
-       // $this->session->set_userdata($val[0]);
-        $this->session->set_userdata('admin', 'true');  
-       $status = true;
-      }else{
-        $status = false;   
-      }
-    }
-    else if($this->session->admin == 'true'){
+public function dashboard(){
+    if($this->session->admin && $this->session->logged_in && $this->session->id){
         $status = true;
     }
     else{ $status = false;
@@ -37,12 +25,22 @@ public function dashboard($id=null){
     }else{
         echo "Access Denied !unauthorized access";
     }
-
-   
+}
+public function get_all_user(){
+    if($this->session->admin && $this->session->logged_in && $this->session->id){
+      $user =  $this->db->query("SELECT * FROM `users`");
+      $this->data['user'] = $user->result();
+      $this->load->view('header');
+      $this->load->view('admin/user',$this->data);
+      $this->load->view('footer');
+    }
+    else{ $status = false;
+        echo "Access Denied !unauthorized access";
+    } 
 }
 
 public function add_deals(){
-        if($this->session->admin == 'true'){
+    if($this->session->admin && $this->session->logged_in && $this->session->id){
         $date = $this->db->query('SELECT `id`, `publish_date` FROM `deals` WHERE `publish` = 1'); 
         $array = $date->result_array();
         $arr = array_column($array,"publish_date");
@@ -75,6 +73,7 @@ public function save_deals(){
     if ($this->form_validation->run() == FALSE)
     {
         $this->session->set_flashdata('error', 'required fields are missing');
+        redirect('admin/add_deals');
     }
     else
     { // echo "hello";exit;
@@ -130,7 +129,124 @@ public function save_deals(){
     }
 }
     
-   
+public function save_user(){
+    // print_r($_POST);exit;
+     $this->form_validation->set_rules('username', 'Username', 'required');
+     $this->form_validation->set_rules('email', 'email', 'required');
+     $this->form_validation->set_rules('password', 'Password', 'required');
+     
+     if ($this->form_validation->run() == FALSE)
+     {
+         $this->session->set_flashdata('error', 'required fields are missing');
+         redirect('admin/register_user');
+     }
+     else
+     { // echo "hello";exit;
+             
+             $username = $this->input->post('username');
+             $email = $this->input->post('email');
+             $password = $this->input->post('password');
+             $password = password_hash($password, PASSWORD_BCRYPT,[12]);
+ 
+             $config['upload_path'] = './uploads/user';
+             $config['allowed_types'] = 'gif|jpg|png';
+             $config['max_size'] = '2097152';
+             $this->load->library('upload', $config);
+            // $this->upload->initialize($config);
+                 if (!is_dir('uploads/user'))
+                 {   $old_mask = umask(0);
+                     mkdir('uploads/user', 0777, true);
+                     umask($old_mask);
+                 }
+                 if ( ! $this->upload->do_upload('image'))
+                 {  
+                 $this->session->set_flashdata('error', 'required images are missing');
+                 redirect('admin/register_user');
+                 }
+                 else
+                 {
+                     $img = array('upload_data' => $this->upload->data());
+                     $image = $img['upload_data']['file_name']; 
+                             
+                 }
+ 
+                 $data = array('table'=>'users',
+                             'val'=>array(
+                                 'username'=>$username,
+                                 'email'=>$email,
+                                 'password'=>$password,
+                                 'image'=>$image,
+                                 'active'=>'1'
+                             ));
+                 $this->db->insert($data['table'],$data['val']);
+                 $user_id = $this->db->insert_id();
+             if($user_id){
+                 $this->session->set_flashdata('error', 'user created successfully');
+                 redirect('admin/login_user','refresh');
+             }else{
+                 $this->session->set_flashdata('error', 'Oops! something went wrong please try again');
+             }
+     }
+ }
+
+ public function register_user(){
+    if($this->session->admin && $this->session->logged_in && $this->session->id){
+    $this->load->view('header');
+    $this->load->view('register');
+    $this->load->view('footer');
+    }else{
+        redirect('admin/login_user');
+    }
+
+ }
+
+ public function login_user(){
+    $this->load->view('header');
+    $this->load->view('login');
+    $this->load->view('footer');
+
+ }
+
+ public function login(){
+
+    $this->form_validation->set_rules('email', 'email', 'required');
+    $this->form_validation->set_rules('password', 'Password', 'required');
+    
+    if ($this->form_validation->run() == FALSE)
+    {
+        $this->session->set_flashdata('error', 'required fields are missing');
+
+    }
+    else
+    { 
+        $email = $this->input->post('email');
+        $password = $this->input->post('password');
+       $user = $this->db->query("SELECT `id`,`password`,`admin` FROM `users` WHERE `email`='$email'");
+       $user_info = $user->row(0);
+       if(password_verify($password,$user_info->password)){
+            if($user_info->admin==1){
+                $admin = array(
+                    'admin'  => TRUE,
+                    'id'     => $user_info->id,
+                    'logged_in' => TRUE
+                );
+                $this->session->set_userdata($admin);
+                redirect('admin/dashboard');
+            }else{
+                $user0 = array(
+                    'user'  => TRUE,
+                    'id'     => $user_info->id,
+                    'logged_in' => TRUE
+                );
+                $this->session->set_userdata($user0);
+                redirect('user/dashboard');
+            }
+        
+       }
+
+    }
+ }
+    
 }
 
 

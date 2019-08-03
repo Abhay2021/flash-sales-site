@@ -10,21 +10,17 @@ class User extends CI_Controller {
 		$this->load->model('user_model', 'auth');
 	}	
 
-public function index($id=null){
-    if($id){
-        $val = $this->auth->get_user_info($id);
-       // print_r($val[0]->admin);exit;
-      if($val[0]->active==1){
-       // $this->session->set_userdata($val[0]);
-       $this->data['uid'] = $id;
-        $this->session->set_userdata('user', 'true');  
-       $status = true;
-      }
+
+public function index(){
+    if($this->session->user && $this->session->logged_in && $this->session->id){
+        $id = $this->session->id;
+        $status = true;
     }
     else{ $status = false;
-        echo "Access Denied !unauthorized access";
+       // echo "Access Denied !unauthorized access";
+       redirect("admin/login");
     }
-    if($status){
+    if($status && $id){
         $user_deals = $this->db->query("SELECT  `deals_id`, `quantity` FROM `orders` WHERE `user_id`= $id");
         $array = $user_deals->result_array();
         $deals_ids = array_column($array,"deals_id");
@@ -47,29 +43,22 @@ public function index($id=null){
         $this->load->view('header');
         $this->load->view('deals',$this->data);
         $this->load->view('footer');
+    }else{ 
+        echo "Access Denied !unauthorized access";
     }
 
    
 }
 
-public function dashboard($id=null){
-    if($id){
-        $val = $this->auth->get_user_info($id);
-       // print_r($val[0]->admin);exit;
-      if($val[0]->active==1){
-       // $this->session->set_userdata($val[0]);
-       $this->data['uid'] = $id;
-        $this->session->set_userdata('user', 'true');  
-       $status = true;
-      }
-    }
-    else if($this->session->user == 'true'){
+public function dashboard(){
+    if($this->session->user && $this->session->logged_in && $this->session->id){
+        $id = $this->session->id;
         $status = true;
     }
     else{ $status = false;
         echo "Access Denied !unauthorized access";
     }
-    if($status){
+    if($status && $id){
         $deals = $this->db->query("SELECT deals.* FROM deals INNER JOIN orders ON deals.id = orders.deals_id AND orders.user_id= '$id'");
        // print_r($deals->result());exit;
         $this->data['deals'] = $deals->result();
@@ -85,7 +74,8 @@ public function dashboard($id=null){
    
 }
 
-public function buy($uid,$id){ //$id = deals id
+public function buy($id){ //$id = deals id
+                 $uid =  $this->session->id; //user id
                 $data = array('table'=>'orders',
                             'val'=>array(
                                 'user_id'=>$uid,

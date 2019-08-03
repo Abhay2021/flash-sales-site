@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 29, 2019 at 10:23 PM
+-- Generation Time: Aug 03, 2019 at 09:07 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.4
 
@@ -47,8 +47,9 @@ CREATE TABLE `deals` (
 --
 
 INSERT INTO `deals` (`id`, `title`, `description`, `price`, `discounted_price`, `quantity`, `remaining_quantity`, `publish_date`, `image`, `added_date`, `publish`) VALUES
-(1, 'deal today', 'deals awesome', 200, 150, 5, 4, '2019-07-29', 'Penguins.jpg', '2019-07-29 19:38:05', 1),
-(2, 'super', 'super sale', 350, 250, 3, 3, '2019-07-30', 'Tulips.jpg', '2019-07-29 19:36:00', 1);
+(1, 'deal today', 'deals awesome', 200, 150, 5, 3, '2019-07-27', 'Penguins.jpg', '2019-08-03 07:06:38', 1),
+(2, 'super', 'super sale', 350, 250, 3, 0, '2019-08-03', 'Tulips.jpg', '2019-08-03 07:07:23', 1),
+(3, 'dfvcx', 'v', 250, 150, 11, 9, '2019-08-01', 'Desert.jpg', '2019-08-03 07:07:10', 1);
 
 -- --------------------------------------------------------
 
@@ -70,7 +71,14 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `deals_id`, `quantity`, `added_date`, `status`) VALUES
-(1, 2, 1, 1, '2019-07-29 18:21:50', 1);
+(1, 2, 1, 1, '2019-07-29 18:21:50', 1),
+(2, 3, 1, 1, '2019-07-30 04:03:17', 1),
+(3, 3, 2, 1, '2019-07-30 04:34:49', 1),
+(4, 2, 2, 1, '2019-07-30 12:53:15', 1),
+(5, 2, 3, 1, '2019-08-01 07:04:07', 1),
+(6, 6, 1, 1, '2019-08-03 07:06:21', 1),
+(7, 6, 3, 1, '2019-08-03 07:06:56', 1),
+(8, 6, 2, 1, '2019-08-03 07:07:23', 1);
 
 -- --------------------------------------------------------
 
@@ -83,7 +91,8 @@ CREATE TABLE `users` (
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `image` varchar(255) DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
   `admin` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -91,10 +100,12 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `active`, `admin`) VALUES
-(1, 'admin', 'admin@codingcyber.com', '202cb962ac59075b964b07152d234b70', 1, 1),
-(2, 'abhay', 'abhay@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', 1, 0),
-(3, 'vikram', 'vikram@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', 1, 0);
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `image`, `active`, `admin`) VALUES
+(2, 'abhay', 'abhay@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', NULL, 1, 0),
+(3, 'vikram', 'vikram@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', NULL, 1, 0),
+(4, 'shankar', 'shankar@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', NULL, 1, 0),
+(5, 'admin', 'admin@gmail.com', '$2y$10$RbQL1ue43SzvZ3xbbT0YUeaNeyrkvWmtoU3dv4GkzNM8ntzo9D4gi', 'Penguins.jpg', 1, 1),
+(6, 'smith', 'smith@yahoo.com', '$2y$10$dH4A2N3W83C1gEzKzMfAiuuNul9qRa7z6u/ZxwN7gLAGKK4cCfgJe', 'Tulips.jpg', 1, 0);
 
 --
 -- Indexes for dumped tables
@@ -128,19 +139,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `deals`
 --
 ALTER TABLE `deals`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
