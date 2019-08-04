@@ -1,5 +1,5 @@
 ###################
-# Flash Sales Site MVP
+# Flash Sales Site MVP with LIMIT LOGIN ATTEMPTS
 ###################
 
 Create a flash sales site where customer save more when shop more.

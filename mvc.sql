@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 03, 2019 at 09:07 AM
+-- Generation Time: Aug 04, 2019 at 03:56 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.4
 
@@ -50,6 +50,33 @@ INSERT INTO `deals` (`id`, `title`, `description`, `price`, `discounted_price`, 
 (1, 'deal today', 'deals awesome', 200, 150, 5, 3, '2019-07-27', 'Penguins.jpg', '2019-08-03 07:06:38', 1),
 (2, 'super', 'super sale', 350, 250, 3, 0, '2019-08-03', 'Tulips.jpg', '2019-08-03 07:07:23', 1),
 (3, 'dfvcx', 'v', 250, 150, 11, 9, '2019-08-01', 'Desert.jpg', '2019-08-03 07:07:10', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `login_attempts`
+--
+
+CREATE TABLE `login_attempts` (
+  `id` int(11) NOT NULL,
+  `ip` varchar(20) NOT NULL,
+  `login_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `login_attempts`
+--
+
+INSERT INTO `login_attempts` (`id`, `ip`, `login_time`) VALUES
+(1, '127.0.0.1', '2019-08-04 13:25:41'),
+(2, '127.0.0.1', '2019-08-04 13:25:58'),
+(3, '127.0.0.1', '2019-08-04 13:26:07'),
+(4, '127.0.0.1', '2019-08-04 13:26:15'),
+(5, '127.0.0.1', '2019-08-04 13:26:35'),
+(6, '127.0.0.1', '2019-08-04 13:29:02'),
+(7, '127.0.0.1', '2019-08-04 13:36:18'),
+(8, '127.0.0.1', '2019-08-04 13:52:56'),
+(9, '127.0.0.1', '2019-08-04 13:53:05');
 
 -- --------------------------------------------------------
 
@@ -119,6 +146,12 @@ ALTER TABLE `deals`
   ADD UNIQUE KEY `publish_date` (`publish_date`);
 
 --
+-- Indexes for table `login_attempts`
+--
+ALTER TABLE `login_attempts`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
@@ -140,6 +173,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `deals`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `login_attempts`
+--
+ALTER TABLE `login_attempts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `orders`

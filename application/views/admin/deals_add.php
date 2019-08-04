@@ -61,11 +61,15 @@ echo $this->session->flashdata('error');
 <div class="row mb-3">
     <div class="col-md-6"><div class="row">
         <label for="image" class="col-sm-3 col-form-label">Image</label>
-        <div class="col-sm-8">
+        <div class="col-sm-5">
         <input  name="image" type="file" class=" req" id="image">
         <span class="error"></span>
+        </div>
+        <div class="col-sm-3">
+        <img src="#" alt="image" id="previewImage" width="80px" height="80px" style="display:none;">
         </div></div>
     </div>
+    
 </div>
 <div class="row">
 <input  type="submit" class="btn btn-primary" name="submit">
@@ -97,6 +101,18 @@ $("#image").change(function () {
         { var max_size_mb = Math.round(max_size/1000000);
           alert('Oops! Sorry!','file size should not exceed '+max_size_mb+'MB limit');
           $(this).val('');
+        }
+
+        if (this.files && this.files[0]) 
+        {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+                $('#previewImage').show();
+            $('#previewImage').attr('src', e.target.result);
+            }
+            
+            reader.readAsDataURL(this.files[0]);
         }
         
 });

@@ -57,7 +57,9 @@ public function add_deals(){
 
 public function logout(){
     $this->session->sess_destroy();
-    echo "logout successfully";
+    $message='logout successfully';
+    $message=urlencode($message);
+    redirect('admin/login_user?message='."$message");
 }
 
 public function save_deals(){
@@ -72,7 +74,7 @@ public function save_deals(){
     
     if ($this->form_validation->run() == FALSE)
     {
-        $this->session->set_flashdata('error', 'required fields are missing');
+        $this->session->set_flashdata('error', validation_errors());
         redirect('admin/add_deals');
     }
     else
@@ -97,7 +99,8 @@ public function save_deals(){
                 }
                 if ( ! $this->upload->do_upload('image'))
                 {
-                // $this->session->set_flashdata('image error', 'required images are missing');
+                 $this->session->set_flashdata('error', 'required images are missing');
+                 redirect('admin/add_deals');
                 }
                 else
                 {
@@ -137,7 +140,7 @@ public function save_user(){
      
      if ($this->form_validation->run() == FALSE)
      {
-         $this->session->set_flashdata('error', 'required fields are missing');
+         $this->session->set_flashdata('error', validation_errors());
          redirect('admin/register_user');
      }
      else
@@ -201,24 +204,39 @@ public function save_user(){
  }
 
  public function login_user(){
+     if(isset($_GET['message'])){$this->data['message'] = $_GET['message'];}
+     else{$this->data['message'] = '';}
     $this->load->view('header');
-    $this->load->view('login');
+    $this->load->view('login',$this->data);
     $this->load->view('footer');
 
  }
 
  public function login(){
-
+        $ip =$_SERVER["REMOTE_ADDR"];
+        $login_attempts=array( 'table'=>'login_attempts',
+                                'val'=>array(
+                                    'ip'=>$ip
+                                    ));
+        $this->db->insert($login_attempts['table'],$login_attempts['val']);                    
+        $query =  $this->db->query("Select count(id) as total_attempts FROM login_attempts WHERE ip LIKE '$ip' AND login_time > (now()-interval 10 minute)");
+         $log_attempts= $query->row(0);
+         if($log_attempts && $log_attempts->total_attempts>3)
+         {
+            $this->session->set_flashdata('error', "Please try agian after 10 minutes. Login attempts exceed it's maximum limit");
+            redirect('admin/login_user');
+         }
     $this->form_validation->set_rules('email', 'email', 'required');
     $this->form_validation->set_rules('password', 'Password', 'required');
     
     if ($this->form_validation->run() == FALSE)
     {
-        $this->session->set_flashdata('error', 'required fields are missing');
-
+        $this->session->set_flashdata('error', validation_errors());
+        redirect('admin/login_user');
     }
     else
-    { 
+    {  
+         
         $email = $this->input->post('email');
         $password = $this->input->post('password');
        $user = $this->db->query("SELECT `id`,`password`,`admin` FROM `users` WHERE `email`='$email'");
@@ -242,6 +260,11 @@ public function save_user(){
                 redirect('user/dashboard');
             }
         
+       }else{
+         
+
+        $this->session->set_flashdata('error', 'Wrong Username or Password');
+        redirect('admin/login_user');
        }
 
     }

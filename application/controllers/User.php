@@ -7,7 +7,7 @@ class User extends CI_Controller {
 	{
         parent::__construct();	
         $this->load->library('form_validation');
-		$this->load->model('user_model', 'auth');
+	
 	}	
 
 
@@ -97,7 +97,9 @@ public function buy($id){ //$id = deals id
 
 public function logout(){
     $this->session->sess_destroy();
-    echo "logout successfully";
+    $message='logout successfully';
+    $message=urlencode($message);
+    redirect('admin/login_user?message='."$message");
 }
     
    
