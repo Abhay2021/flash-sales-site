@@ -14,7 +14,7 @@ public function dashboard(){
         $status = true;
     }
     else{ $status = false;
-        echo "Access Denied !unauthorized access";
+        echo "Access Denied !unauthorized access"; exit;
     }
     if($status){
         $deals = $this->db->query('SELECT * FROM `deals`');
@@ -23,7 +23,7 @@ public function dashboard(){
         $this->load->view('admin/dashboard',$this->data);
         $this->load->view('footer');
     }else{
-        echo "Access Denied !unauthorized access";
+        echo "Access Denied !unauthorized access"; exit;
     }
 }
 public function get_all_user(){
@@ -132,11 +132,13 @@ public function save_deals(){
     }
 }
     
-public function save_user(){
+public function save_user($id=null){
     // print_r($_POST);exit;
      $this->form_validation->set_rules('username', 'Username', 'required');
      $this->form_validation->set_rules('email', 'email', 'required');
-     $this->form_validation->set_rules('password', 'Password', 'required');
+     if(!$id){
+        $this->form_validation->set_rules('password', 'Password', 'required');   
+    }
      
      if ($this->form_validation->run() == FALSE)
      {
@@ -149,8 +151,10 @@ public function save_user(){
              $username = $this->input->post('username');
              $email = $this->input->post('email');
              $password = $this->input->post('password');
-             $password = password_hash($password, PASSWORD_BCRYPT,[12]);
- 
+             
+             $image =null;
+             if($_FILES['image']['name'])
+             {
              $config['upload_path'] = './uploads/user';
              $config['allowed_types'] = 'gif|jpg|png';
              $config['max_size'] = '2097152';
@@ -172,30 +176,52 @@ public function save_user(){
                      $image = $img['upload_data']['file_name']; 
                              
                  }
- 
+            }
                  $data = array('table'=>'users',
                              'val'=>array(
                                  'username'=>$username,
-                                 'email'=>$email,
-                                 'password'=>$password,
-                                 'image'=>$image,
-                                 'active'=>'1'
+                                 'email'=>$email
+                                 //,'password'=>$password,
+                                // 'image'=>$image,
+                                // 'active'=>'1'
                              ));
-                 $this->db->insert($data['table'],$data['val']);
-                 $user_id = $this->db->insert_id();
-             if($user_id){
-                 $this->session->set_flashdata('error', 'user created successfully');
-                 redirect('admin/login_user','refresh');
-             }else{
-                 $this->session->set_flashdata('error', 'Oops! something went wrong please try again');
+            if($password){
+                 $password = password_hash($password, PASSWORD_BCRYPT,[12]);
+                 $data['val']['password']=$password;
              }
+            if($image){
+                $data['val']['image']=$image;
+            }
+            if($id){
+                $this->db->where('id',$id);
+                $this->db->update($data['table'],$data['val']);   
+                $this->session->set_flashdata('error', 'user updated successfully');
+                    redirect('admin/get_all_user','refresh'); 
+            }else{
+                $data['val']['active']='1';
+                $this->db->insert($data['table'],$data['val']);
+                 $user_id = $this->db->insert_id();
+                 if($user_id){
+                    $this->session->set_flashdata('error', 'user created successfully');
+                    redirect('admin/login_user','refresh');
+                }else{
+                    $this->session->set_flashdata('error', 'Oops! something went wrong please try again');
+                }
+            }
+                 
+             
      }
  }
 
- public function register_user(){
+ public function register_user($uid=null){
     if($this->session->admin && $this->session->logged_in && $this->session->id){
+        if($uid){
+            $user =  $this->db->query("SELECT * FROM `users` WHERE id='$uid'");
+            $info = $user->row(0);
+            $this->data['user'] = $info;
+        }else{ $this->data['a'] = ''; }
     $this->load->view('header');
-    $this->load->view('register');
+    $this->load->view('register',$this->data);
     $this->load->view('footer');
     }else{
         redirect('admin/login_user');
@@ -267,6 +293,24 @@ public function save_user(){
         redirect('admin/login_user');
        }
 
+    }
+ }
+
+ public function user_status(){
+    $uid = $this->input->post('id');
+    $status = $this->input->post('status');
+   // print_r($_POST); exit;
+    if($uid){
+        if($status=='0'){
+            $this->db->query("UPDATE `users` SET `active`='0' WHERE id='$uid'");
+            $data = array('msg'=>'Activate');
+        }else{
+            $this->db->query("UPDATE `users` SET `active`='1' WHERE id='$uid'");
+            $data = array('msg'=>'Deactivate'); 
+        }
+        echo json_encode($data);
+    }else{
+        echo "something went wrong";
     }
  }
     

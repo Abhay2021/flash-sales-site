@@ -4,43 +4,48 @@
 if($this->session->flashdata('error')){
 echo '<div class="alert alert-danger">'.$this->session->flashdata('error').'</div>';
 }
+//print_r($user->id);exit;
+if(isset($user)){ $id= $user->id;
+ $image = isset($user->image)?$user->image:'' ;
+ $image = base_url("uploads/user/$image");
+}else{$id=$image='';}
 ?>
 </div>
 <div class="row"><a href="<?php echo base_url(); ?>admin/dashboard" class="btn btn-primary" >Dashboard</a></div>
-<form id="user_add" action="<?php echo base_url(); ?>admin/save_user" method="post" enctype="multipart/form-data">
+<form id="user_add" action="<?php echo base_url("admin/save_user/$id"); ?>" method="post" enctype="multipart/form-data">
 <div class="form-group row">
     <label  class="col-sm-2 col-form-label">Username</label>
     <div class="col-sm-10">
-      <input type="text" class="req form-control" name="username" placeholder="">
+      <input value="<?php echo isset($user->username)?$user->username:'' ; ?>" type="text" class="req form-control" name="username" placeholder="">
       <span class="error"></span>
     </div>
   </div>
   <div class="form-group row">
     <label  class="col-sm-2 col-form-label">Email</label>
     <div class="col-sm-10">
-      <input type="email" class="req form-control" name="email" placeholder="">
+      <input value="<?php echo isset($user->email)?$user->email:''; ?>" type="email" class="req form-control" name="email" placeholder="">
       <span class="error"></span>
     </div>
   </div>
   <div class="form-group row">
     <label  class="col-sm-2 col-form-label">Password</label>
     <div class="col-sm-10">
-      <input type="password" class="req form-control" name="password" placeholder="">
-      <span class="error"></span>
+      <input type="password" class="<?php if(!isset($user)){echo 'req';} ?> form-control" name="password" placeholder="">
+      <span class="error"><?php if(isset($user)){echo 'Leave Password blank if you don\'t want to change' ;} ?></span>
     </div>
   </div>
   <div class="form-group row">
     <label  class="col-sm-2 col-form-label">Image</label>
     <div class="col-sm-4">
-      <input type="file" class="req" name="image" id="image" placeholder="">
+      <input  type="file" class="<?php if(!isset($user)){echo 'req';} ?>" name="image" id="image" placeholder="">
       <span class="error"></span>
     </div>
     <div class="col-md-3">
-    <img src="#" alt="image" id="previewImage" width="80px" height="80px" style="display:none;">
+    <img src="<?php echo $image; ?>" alt="image" id="previewImage" width="80px" height="80px" <?php if(!isset($user->image)){echo 'style="display:none;"';} ?> >
     </div>
   </div>
   <div class="row">
-  <input type="submit" class=" btn btn-primary" name="submit">
+  <input value="submit" type="submit" class=" btn btn-primary" name="submit">
   </div>
   </form>
 <script>
