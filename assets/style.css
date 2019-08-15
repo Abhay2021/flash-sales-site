@@ -1,0 +1,7 @@
+.scroll{
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#user-table{
+    height:500px;
+}

@@ -134,10 +134,10 @@ public function save_deals(){
     
 public function save_user($id=null){
     // print_r($_POST);exit;
-     $this->form_validation->set_rules('username', 'Username', 'required');
-     $this->form_validation->set_rules('email', 'email', 'required');
+     $this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[3]|max_length[25]');
+     $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email');
      if(!$id){
-        $this->form_validation->set_rules('password', 'Password', 'required');   
+        $this->form_validation->set_rules('password', 'trim|Password|min_length[5]', 'required');   
     }
      
      if ($this->form_validation->run() == FALSE)
@@ -195,17 +195,18 @@ public function save_user($id=null){
             if($id){
                 $this->db->where('id',$id);
                 $this->db->update($data['table'],$data['val']);   
-                $this->session->set_flashdata('error', 'user updated successfully');
+                $this->session->set_flashdata('msg', 'user updated successfully');
                     redirect('admin/get_all_user','refresh'); 
             }else{
                 $data['val']['active']='1';
                 $this->db->insert($data['table'],$data['val']);
                  $user_id = $this->db->insert_id();
                  if($user_id){
-                    $this->session->set_flashdata('error', 'user created successfully');
-                    redirect('admin/login_user','refresh');
+                    $this->session->set_flashdata('msg', 'user created successfully');
+                    redirect('admin/get_all_user','refresh');
                 }else{
                     $this->session->set_flashdata('error', 'Oops! something went wrong please try again');
+                    redirect('admin/register_user','refresh');
                 }
             }
                  
@@ -232,12 +233,54 @@ public function save_user($id=null){
  public function login_user(){
      if(isset($_GET['message'])){$this->data['message'] = $_GET['message'];}
      else{$this->data['message'] = '';}
+    /**
+     *generate CAPTCHA  
+     * */ 
+    $this->load->helper('captcha');
+    
+    // Creating captcha folder if it doesn't exist
+    if (!is_dir('captcha'))
+        {   $old_mask = umask(0);
+                    mkdir('captcha', 0777, true);
+                    umask($old_mask);
+        }
+    //Captcha helper create everytime new image so we have to delete old captcha images
+    $file = $this->session->userdata('filename');
+    $file_path = "./captcha/$file";
+    if($file && file_exists($file_path)){
+        unlink($file_path); //delete old captcha image
+    }
+
+    $arg = array(
+        
+        'img_path'	=> './captcha/',
+        'img_url'	=> base_url("captcha"),
+        'img_width'	=> '300',
+        'img_height'	=> '50',
+        'font_path'	=> '',
+        'expiration'	=> 500,
+        'word_length'	=> 8,
+        'font_size'	=> 16,
+        'img_id'	=> '',
+        'pool'		=> '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        'colors'	=> array(
+            'background'	=> array(0,0,0),
+            'border'	=> array(153,102,102),
+            'text'		=> array(255,255,255),
+            'grid'		=> array(0,0,0)
+        )
+    );
+    $cap = create_captcha($arg); 
+    $this->data['captcha_image']=$cap['image'];
+    //Assign captcha word in session for check after form submit
+    $this->session->set_userdata('captcha_key',$cap['word']);
+    $this->session->set_userdata('filename',$cap['filename']);
     $this->load->view('header');
     $this->load->view('login',$this->data);
     $this->load->view('footer');
 
  }
-
+ 
  public function login(){
         $ip =$_SERVER["REMOTE_ADDR"];
         $login_attempts=array( 'table'=>'login_attempts',
@@ -247,27 +290,29 @@ public function save_user($id=null){
         $this->db->insert($login_attempts['table'],$login_attempts['val']);                    
         $query =  $this->db->query("Select count(id) as total_attempts FROM login_attempts WHERE ip LIKE '$ip' AND login_time > (now()-interval 10 minute)");
          $log_attempts= $query->row(0);
-         if($log_attempts && $log_attempts->total_attempts>3)
+         if($log_attempts && $log_attempts->total_attempts>5)
          {
             $this->session->set_flashdata('error', "Please try agian after 10 minutes. Login attempts exceed it's maximum limit");
             redirect('admin/login_user');
          }
-    $this->form_validation->set_rules('email', 'email', 'required');
+    $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email');
     $this->form_validation->set_rules('password', 'Password', 'required');
-    
+    $this->form_validation->set_rules('captcha', 'Captcha', 'required');
     if ($this->form_validation->run() == FALSE)
     {
         $this->session->set_flashdata('error', validation_errors());
         redirect('admin/login_user');
     }
     else
-    {  
-         
+    {  $realCaptcha = $this->session->userdata('captcha_key');
+       $inputCaptcha =  $this->input->post('captcha');
+       if($realCaptcha === $inputCaptcha)
+       {
         $email = $this->input->post('email');
         $password = $this->input->post('password');
-       $user = $this->db->query("SELECT `id`,`password`,`admin` FROM `users` WHERE `email`='$email'");
-       $user_info = $user->row(0);
-       if(password_verify($password,$user_info->password)){
+        $user = $this->db->query("SELECT `id`,`password`,`admin` FROM `users` WHERE `email`='$email'");
+        $user_info = $user->row(0);
+        if(password_verify($password,$user_info->password)){
             if($user_info->admin==1){
                 $admin = array(
                     'admin'  => TRUE,
@@ -286,32 +331,39 @@ public function save_user($id=null){
                 redirect('user/dashboard');
             }
         
+          }else{
+           $this->session->set_flashdata('error', 'Wrong Username or Password');
+           redirect('admin/login_user');
+          }
        }else{
-         
-
-        $this->session->set_flashdata('error', 'Wrong Username or Password');
+        $this->session->set_flashdata('error', 'Invalid Captcha');
         redirect('admin/login_user');
-       }
-
+       }  
     }
  }
 
  public function user_status(){
-    $uid = $this->input->post('id');
-    $status = $this->input->post('status');
+    $uid = $_GET['id'];
+    $status = $_GET['status'];
    // print_r($_POST); exit;
-    if($uid){
-        if($status=='0'){
+   if($this->session->admin && $this->session->logged_in && $this->session->id){
+        if($uid){
+            if($status=='0'){
             $this->db->query("UPDATE `users` SET `active`='0' WHERE id='$uid'");
             $data = array('msg'=>'Activate');
-        }else{
+           }else{
             $this->db->query("UPDATE `users` SET `active`='1' WHERE id='$uid'");
             $data = array('msg'=>'Deactivate'); 
-        }
-        echo json_encode($data);
-    }else{
+           }
+           echo json_encode($data);
+        }else{
         echo "something went wrong";
+        }
     }
+    else{ 
+      echo "Access Denied !unauthorized access";
+    } 
+   
  }
     
 }

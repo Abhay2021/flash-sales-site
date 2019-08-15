@@ -1,3 +1,8 @@
+<?php 
+/**
+ * this page is use for User Dashboard where user can see their purchase items
+ */
+?>
 <div class="row"><h2>User Dashboard</h2></div>
 <div class="row">
 <a href="<?php echo base_url("user/index/".$this->session->id); ?>" class="btn btn-primary" >Shop More</a>

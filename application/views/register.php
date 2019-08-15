@@ -1,3 +1,8 @@
+<?php 
+/**
+ * this page is use for register user by admin
+ */
+?>
 <div class="row mt-5">
 <?php 
 //echo validation_errors('<div class="alert alert-danger">', '</div>'); 
@@ -13,6 +18,12 @@ if(isset($user)){ $id= $user->id;
 </div>
 <div class="row"><a href="<?php echo base_url(); ?>admin/dashboard" class="btn btn-primary" >Dashboard</a></div>
 <form id="user_add" action="<?php echo base_url("admin/save_user/$id"); ?>" method="post" enctype="multipart/form-data">
+<?php 
+  //CSRF Security
+  $hash_name = $this->security->get_csrf_token_name();
+  $hash_val = $this->security->get_csrf_hash();
+  ?>
+    <input type="hidden" name="<?php echo $hash_name; ?>" value="<?php echo $hash_val; ?>">
 <div class="form-group row">
     <label  class="col-sm-2 col-form-label">Username</label>
     <div class="col-sm-10">
@@ -51,7 +62,7 @@ if(isset($user)){ $id= $user->id;
 <script>
 //-------------Image validation---------------
 $("#image").change(function () {
-        var fileExtension = ['jpg','png','gif'];
+        var fileExtension = ['jpg','jpeg','png','gif'];
         if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
             alert("Only formats are allowed : "+fileExtension.join(', '));
             $(this).val('');

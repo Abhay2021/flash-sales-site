@@ -1,4 +1,9 @@
 <?php 
+/**
+ * this page is use for add dels by admin 
+ */
+?>
+<?php 
 echo validation_errors('<div class="alert alert-danger">', '</div>'); 
 echo $this->session->flashdata('error');
 ?>
@@ -8,6 +13,12 @@ echo $this->session->flashdata('error');
 </div>
 <div class="row"><h2>Add Deals</h2></div>
 <form id="deals_add" method="post"  action="<?php echo base_url(); ?>/admin/save_deals" enctype="multipart/form-data" >
+<?php 
+  //CSRF Security
+  $hash_name = $this->security->get_csrf_token_name();
+  $hash_val = $this->security->get_csrf_hash();
+  ?>
+    <input type="hidden" name="<?php echo $hash_name; ?>" value="<?php echo $hash_val; ?>">
 <div class="row mt-5 mb-3">
     <div class="col-md-6"><div class="row">
         <label for="title" class="col-sm-3 col-form-label">Title</label>

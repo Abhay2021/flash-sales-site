@@ -1,3 +1,9 @@
+<?php 
+/**
+ * this page is use for Admin Dashboard where admin can see all deals details 
+ */
+?>
+
 <div class="row"><h2>Admin Dashboard</h2></div>
 <div class="row m-2">
 <a href="<?php echo base_url(); ?>admin/add_deals" class="btn btn-primary" >Add Deals</a>
